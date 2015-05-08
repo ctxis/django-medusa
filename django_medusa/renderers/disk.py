@@ -35,6 +35,9 @@ def _disk_render_path(args):
         outpath = os.path.join(DEPLOY_DIR, realpath)
 
         resp = client.get(path)
+        if resp.status_code == 301 or resp.status_code == 302:
+            print('%s - redirect - skipping...' % path)
+            return None
         if resp.status_code != 200:
             raise Exception
         if needs_ext:
