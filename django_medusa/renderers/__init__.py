@@ -1,5 +1,10 @@
 from django.conf import settings
-from django.utils import importlib
+try:
+    # Django versions < 1.9
+    from django.utils.importlib import import_module
+except ImportError:
+    # Django versions >= 1.9
+    from django.utils.module_loading import import_module
 from .base import BaseStaticSiteRenderer
 from .disk import DiskStaticSiteRenderer
 from .appengine import GAEStaticSiteRenderer
@@ -12,7 +17,7 @@ __all__ = ('BaseStaticSiteRenderer', 'DiskStaticSiteRenderer',
 
 def get_cls(renderer_name):
     mod_path, cls_name = renderer_name.rsplit('.', 1)
-    mod = importlib.import_module(mod_path)
+    mod = import_module(mod_path)
     return getattr(mod, cls_name)
 
 
